@@ -2,8 +2,8 @@ package ros.actionlib;
 
 import ros.Ros;
 import ros.actionlib.client.SimpleActionClient;
-import ros.actionlib.spec.FibonacciActionSpec;
-import ros.actionlib.spec.FibonacciActionSpec.FibonacciSimpleActionClient;
+import ros.actionlib.example.FibonacciActionSpec;
+import ros.actionlib.example.FibonacciSimpleActionClient;
 import ros.actionlib.state.SimpleClientGoalState;
 import ros.communication.Duration;
 import ros.pkg.actionlib_tutorials.msg.FibonacciAction;
@@ -141,5 +141,4 @@ public class Test {
 		
 	}
 	
-
 }

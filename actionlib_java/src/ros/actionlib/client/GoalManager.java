@@ -41,7 +41,7 @@ import ros.pkg.actionlib_msgs.msg.GoalStatusArray;
 public class GoalManager<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL extends Message, T_ACTION_RESULT extends Message, T_FEEDBACK extends Message, T_GOAL extends Message, T_RESULT extends Message> {
 
 	/**
-	 * A collection of active GoalHandles
+	 * The collection of active GoalHandles
 	 */
 	protected Vector<ClientGoalHandle<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT>> listOfGoalHandles;
 	
@@ -68,7 +68,7 @@ public class GoalManager<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL extend
 		this.actionClient = actionClient;
 		NodeHandle nh = actionClient.getNodeHandle();
 		idGenerator = new GoalIDGenerator(nh.getNamespace()+nh.getName());
-		listOfGoalHandles = new Vector<ClientGoalHandle<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT>>();
+		listOfGoalHandles = new Vector<ClientGoalHandle<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT>>(50);
 		
 	}
 

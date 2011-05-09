@@ -322,8 +322,6 @@ public class ActionClient<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL exten
 			return false;
 		}
 
-		// TODO check for publisher on subscribed topics? not in rosjava right now?
-
 		Ros.getInstance().logDebug("[ActionClient] isServerConnected -> true (action server '" + callerID + "')");
 		return true;
 
@@ -393,8 +391,7 @@ public class ActionClient<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL exten
 		synchronized (waitSync) {
 			while (nodeHandle.ok() && !isServerConnected()) {
 
-				Duration timeLeft = timeoutTime.subtract(Ros.getInstance()
-						.now());
+				Duration timeLeft = timeoutTime.subtract(Ros.getInstance().now());
 				if (timeLeft.totalNsecs() / 1000000 <= 0 && !timeout.isZero()) {
 					break;
 				}

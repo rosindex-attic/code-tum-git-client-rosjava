@@ -323,6 +323,7 @@ public class SimpleActionClient<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 	 */
 	public void shutdown() {
 		actionClient.shutdown();
+		stopSpinThread();
 	}
 	
 	/**

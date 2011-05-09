@@ -7,6 +7,7 @@ import ros.Ros;
 import ros.RosException;
 import ros.actionlib.client.ActionClient;
 import ros.actionlib.client.SimpleActionClient;
+import ros.actionlib.example.FibonacciActionSpec;
 import ros.communication.Message;
 import ros.communication.Time;
 import ros.pkg.actionlib_msgs.msg.GoalID;
@@ -50,8 +51,23 @@ import ros.pkg.roslib.msg.Header;
  * }
  * </pre>
  * </blockquote>
+ * In order to cut the declaration part short, a specialized ActionSpec can be
+ * derived and used (e.g. {@link FibonacciActionSpec}):
+ * <blockquote>
+ * <pre>
+ * {@code 
+ * FibonacciActionSpec spec = new FibonacciActionSpec();
+ * FibonacciSimpleActionClient sac = spec.buildSimpleActionClient("fibonacci");
+ * }
+ * </pre>
+ * </blockquote>
+ * 
  * 
  * @author Alexander C. Perzylo, perzylo@cs.tum.edu
+ * 
+ * @see FibonacciActionSpec
+ * @see FibonacciActionSpec.FibonacciActionClient
+ * @see FibonacciActionSpec.FibonacciSimpleActionClient
  * 
  * @param <T_ACTION>
  *            action message
