@@ -16,6 +16,9 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
+rosbuild_find_ros_package(actionlib_java)
+add_classpath(${actionlib_java_PACKAGE_PATH}/bin)
+add_runtime_classpath(${actionlib_java_PACKAGE_PATH}/bin)
 add_classpath(${PROJECT_SOURCE_DIR}/bin)
 add_runtime_classpath(${PROJECT_SOURCE_DIR}/bin)
 add_java_source_dir(${PROJECT_SOURCE_DIR}/src)
