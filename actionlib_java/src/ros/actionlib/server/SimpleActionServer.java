@@ -31,16 +31,16 @@ public class SimpleActionServer<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
     protected boolean useBlockingGoalCallback = false;
     
 	
-	public SimpleActionServer(String nameSpace, ActionSpec<?, T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> spec, SimpleActionServerCallbacks<T_ACTION_FEEDBACK,T_ACTION_GOAL,T_ACTION_RESULT,T_FEEDBACK,T_GOAL,T_RESULT> callbacks, boolean useBlockingGoalCallback, boolean autoStart) {
+    public SimpleActionServer(String nameSpace, ActionSpec<?, T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> spec, SimpleActionServerCallbacks<T_ACTION_FEEDBACK,T_ACTION_GOAL,T_ACTION_RESULT,T_FEEDBACK,T_GOAL,T_RESULT> callbacks, boolean useBlockingGoalCallback, boolean autoStart) {
 
-		this.callbacks = callbacks;
-		this.actionServer = new ActionServer<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> (nameSpace, spec, this, autoStart);
-		if (useBlockingGoalCallback) {
-			this.useBlockingGoalCallback = true;
-			startCallbackThread();
-		}
-		
-	}
+    	this.callbacks = callbacks;
+    	this.actionServer = new ActionServer<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> (nameSpace, spec, this, autoStart);
+    	if (useBlockingGoalCallback) {
+    		this.useBlockingGoalCallback = true;
+    		startCallbackThread();
+    	}
+
+    }
 
 	public SimpleActionServer(NodeHandle parent, String nameSpace, ActionSpec<?, T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> spec, SimpleActionServerCallbacks<T_ACTION_FEEDBACK,T_ACTION_GOAL,T_ACTION_RESULT,T_FEEDBACK,T_GOAL,T_RESULT> callbacks, boolean useBlockingGoalCallback, boolean autoStart) {
 
@@ -286,7 +286,7 @@ public class SimpleActionServer<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 
 				preemptRequest = true;
 				if (callbacks != null) {
-					callbacks.preemptCallback();
+					callbacks.preemptCallback(this);
 				}
 				
 			} else if (nextGoal != null && goalToCancel.equals(nextGoal)) {
@@ -326,10 +326,10 @@ public class SimpleActionServer<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 				
 				if (isActive()) {
 					preemptRequest = true;
-					callbacks.preemptCallback();
+					callbacks.preemptCallback(this);
 				}
 				
-				callbacks.goalCallback();
+				callbacks.goalCallback(this);
 				
 				if (useBlockingGoalCallback) {
 					c.signalAll();	
