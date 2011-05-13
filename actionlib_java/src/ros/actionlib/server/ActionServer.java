@@ -71,26 +71,29 @@ public class ActionServer<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL exten
 
 	}
 
-	public void start() {
+	public boolean start() {
 
 		if (shutdown) {
 			Ros.getInstance().logError("[ActionServer] Can't start an action server which was shut down.");
-			return;
+			return false;
 		}
 		
 		if (callbacks == null) {
 			Ros.getInstance().logError("[ActionServer] Can't start an action server without registered user code callbacks.");
-			return;
+			return false;
 		}
 		
+		boolean started = false;
 		if (!active) {
 			if (initServer()) {
 				active = true;
-				publishStatus();				
+				started = true;
+				publishStatus();
 			} else {
 				Ros.getInstance().logError("[ActionServer] Couldn't set up needed Subscribers and Publishers due to a RosException");
 			}
 		}
+		return started;
 
 	}
 	
