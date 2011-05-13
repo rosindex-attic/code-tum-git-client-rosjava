@@ -160,13 +160,14 @@ public class SimpleActionServer<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 		currentGoal.publishFeedback(feedback);
 	}
 	
-	public void start() {
+	public boolean start() {
 		
 		if (callbacks == null) {
 			Ros.getInstance().logError("[SimpleActionServer] Can't start an action server without registered user callbacks.");
-			return;
+			return false;
 		}
-		actionServer.start();
+		return actionServer.start();
+		
 	}
 
 	public void shutdown() {
@@ -178,6 +179,9 @@ public class SimpleActionServer<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 
 		synchronized (threadSync) {
 			if (callbackThread == null) {
+				
+				final SimpleActionServer<T_ACTION_FEEDBACK,T_ACTION_GOAL,T_ACTION_RESULT,T_FEEDBACK,T_GOAL,T_RESULT> sas = this; 
+				
 				callbackThread = new Thread() {
 					
 					@Override
@@ -202,7 +206,7 @@ public class SimpleActionServer<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 									lock.unlock();
 									boolean exception = false;
 									try {
-										callbacks.blockingGoalCallback(goal);
+										callbacks.blockingGoalCallback(goal, sas);
 									} catch (Exception e) {
 										Ros.getInstance().logError("[SimpleActionServer] Exception in user callback, current goal gets aborted: "+e.toString());
 										exception = true;
@@ -219,7 +223,7 @@ public class SimpleActionServer<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 									
 								} else {
 									if (!killCallbackThread) {
-										c.wait(1000);	
+										c.awaitNanos(1000000000);
 									}
 								}
 								
@@ -249,7 +253,7 @@ public class SimpleActionServer<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 				
 				lock.lock();
 				try{
-					c.notifyAll();	
+					c.signalAll();	
 				} finally {
 					lock.unlock();
 				}
@@ -328,7 +332,7 @@ public class SimpleActionServer<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 				callbacks.goalCallback();
 				
 				if (useBlockingGoalCallback) {
-					c.notifyAll();	
+					c.signalAll();	
 				}
 				
 			} else {
