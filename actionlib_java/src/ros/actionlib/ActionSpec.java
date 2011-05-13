@@ -7,7 +7,15 @@ import ros.Ros;
 import ros.RosException;
 import ros.actionlib.client.ActionClient;
 import ros.actionlib.client.SimpleActionClient;
+import ros.actionlib.example.FibonacciActionClient;
+import ros.actionlib.example.FibonacciActionServer;
 import ros.actionlib.example.FibonacciActionSpec;
+import ros.actionlib.example.FibonacciSimpleActionClient;
+import ros.actionlib.example.FibonacciSimpleActionServer;
+import ros.actionlib.server.ActionServer;
+import ros.actionlib.server.ActionServerCallbacks;
+import ros.actionlib.server.SimpleActionServer;
+import ros.actionlib.server.SimpleActionServerCallbacks;
 import ros.communication.Message;
 import ros.communication.Time;
 import ros.pkg.actionlib_msgs.msg.GoalID;
@@ -20,7 +28,8 @@ import ros.pkg.roslib.msg.Header;
  * communicate. It provides methods to create all necessary action messages and
  * extract specific pieces of data from given messages. ActionSpecs are needed
  * as a parameter to instantiate an action client or server. For the user's 
- * convenience the ActionSpec class contains methods to build action clients.
+ * convenience the ActionSpec class contains methods to build action clients 
+ * and servers.
  * <br>
  * Example:
  * <blockquote>
@@ -66,8 +75,10 @@ import ros.pkg.roslib.msg.Header;
  * @author Alexander C. Perzylo, perzylo@cs.tum.edu
  * 
  * @see FibonacciActionSpec
- * @see FibonacciActionSpec.FibonacciActionClient
- * @see FibonacciActionSpec.FibonacciSimpleActionClient
+ * @see FibonacciActionClient
+ * @see FibonacciSimpleActionClient
+ * @see FibonacciActionServer
+ * @see FibonacciSimpleActionServer
  * 
  * @param <T_ACTION>
  *            action message
@@ -166,7 +177,7 @@ public class ActionSpec<T_ACTION extends Message, T_ACTION_FEEDBACK extends Mess
 			f = cAR.getField("result");
 			cR = (Class<T_RESULT>) f.getType();
 
-			name = cA.getSimpleName().substring(0, cA.getSimpleName().length() - 6).toLowerCase();
+			name = cA.getSimpleName();
 
 		} catch (Exception e) {
 
@@ -278,10 +289,10 @@ public class ActionSpec<T_ACTION extends Message, T_ACTION_FEEDBACK extends Mess
 	}
 
 	/**
-	 * Creates a SimpleActionClient using this ActionSpec and a given name
-	 * space. The SimpleActionClient gets parameterized to create a new thread
-	 * to service the callbacks. This spares the users the effort to call spin()
-	 * or spinOnce() themselves.
+	 * Creates a SimpleActionClient using this ActionSpec, a given node handle 
+	 * and name space. The SimpleActionClient gets parameterized to create a 
+	 * new thread to service the callbacks. This spares the users the effort to
+	 * call spin() or spinOnce() themselves.
 	 * 
 	 * @param nodeHandle
 	 *            The node handle to be used by the SimpleActionClient as its 
@@ -303,7 +314,123 @@ public class ActionSpec<T_ACTION extends Message, T_ACTION_FEEDBACK extends Mess
 
 	}
 
-
+	/**
+	 * Creates an ActionServer using this ActionSpec, a given name space and
+	 * a callback object intended to be used by the server.
+	 * 
+	 * @param nameSpace 
+	 *            The name space to communicate within
+	 * @param callbacks 
+	 *            A callback object providing callback methods, which get 
+	 *            called by the server 
+	 * @param autoStart
+	 *            A flag, indicating whether the server shall be immediately 
+	 *            started or not 
+	 * @return An ActionServer object
+	 */
+	public ActionServer<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> buildActionServer(
+			String nameSpace, 
+			ActionServerCallbacks<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> callbacks,
+			boolean autoStart) {
+	
+		return new ActionServer<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> (
+				nameSpace, this, callbacks, autoStart);
+		
+	}
+	
+	/**
+	 * Creates an ActionServer using this ActionSpec, a given node handle
+	 * and name space and a callback object intended to be used by the server.
+	 * 
+	 * @param nodeHandle
+	 *            The node handle to be used by the ActionServer as its parent
+	 *            node
+	 * @param nameSpace 
+	 *            The name space to communicate within
+	 * @param callbacks 
+	 *            A callback object providing callback methods, which get 
+	 *            called by the server 
+	 * @param autoStart
+	 *            A flag, indicating whether the server shall be immediately 
+	 *            started or not 
+	 * @return An ActionServer object
+	 */
+	public ActionServer<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> buildActionServer(
+			NodeHandle nodeHandle, String nameSpace, 
+			ActionServerCallbacks<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> callbacks,
+			boolean autoStart) {
+	
+		return new ActionServer<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> (
+				nodeHandle, nameSpace, this, callbacks, autoStart);
+		
+	}
+	
+	/**
+	 * Creates a SimpleActionServer using this ActionSpec, a given name
+	 * space and a callback object intended to be used by the server. The  
+	 * useBlockingGoalCallback parameter specifies which callback method
+	 * will be used on the reception of goal messages.
+	 * 
+	 * @param nameSpace
+	 *            The name space to communicate within
+	 * @param callbacks 
+	 *            A callback object providing callback methods, which get 
+	 *            called by the server
+	 * @param useBlockingGoalCallback
+	 *            A Flag, indicating whether the blocking or non-blocking 
+	 *            callback method shall be used  
+	 * @param autoStart
+	 *            A flag, indicating whether the server shall be immediately 
+	 *            started or not 
+	 * @return A SimpleActionServer object
+	 * 
+	 * @see SimpleActionServerCallbacks#blockingGoalCallback(Message)
+	 * @see SimpleActionServerCallbacks#goalCallback()
+	 */
+	public SimpleActionServer<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> buildSimpleActionServer(
+			String nameSpace, 
+			SimpleActionServerCallbacks<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> callbacks,
+			boolean useBlockingGoalCallback, boolean autoStart) {
+	
+		return new SimpleActionServer<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> (
+				nameSpace, this, callbacks, useBlockingGoalCallback, autoStart);
+		
+	}
+	
+	/**
+	 * Creates a SimpleActionServer using this ActionSpec, a given node handle
+	 * and name space and a callback object intended to be used by the server.
+	 * The useBlockingGoalCallback parameter specifies which callback method
+	 * will be used on the reception of goal messages.
+	 * 
+	 * @param nodeHandle
+	 *            The node handle to be used by the ActionServer as its parent
+	 *            node
+	 * @param nameSpace
+	 *            The name space to communicate within
+	 * @param callbacks 
+	 *            A callback object providing callback methods, which get 
+	 *            called by the server
+	 * @param useBlockingGoalCallback
+	 *            A Flag, indicating whether the blocking or non-blocking 
+	 *            callback method shall be used  
+	 * @param autoStart
+	 *            A flag, indicating whether the server shall be immediately 
+	 *            started or not 
+	 * @return A SimpleActionServer object
+	 * 
+	 * @see SimpleActionServerCallbacks#blockingGoalCallback(Message)
+	 * @see SimpleActionServerCallbacks#goalCallback()
+	 */
+	public SimpleActionServer<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> buildSimpleActionServer(
+			NodeHandle nodeHandle, String nameSpace, 
+			SimpleActionServerCallbacks<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> callbacks,
+			boolean useBlockingGoalCallback, boolean autoStart) {
+	
+		return new SimpleActionServer<T_ACTION_FEEDBACK, T_ACTION_GOAL, T_ACTION_RESULT, T_FEEDBACK, T_GOAL, T_RESULT> (
+				nodeHandle, nameSpace, this, callbacks, useBlockingGoalCallback, autoStart);
+		
+	}
 
 	/**
 	 * Creates an action message.
