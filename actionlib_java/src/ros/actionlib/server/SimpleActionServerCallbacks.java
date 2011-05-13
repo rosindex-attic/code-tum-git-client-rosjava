@@ -8,6 +8,6 @@ public interface SimpleActionServerCallbacks<T_ACTION_FEEDBACK extends Message,T
 	
 	public void preemptCallback();
 
-	public void blockingGoalCallback(T_GOAL goal);
+	public void blockingGoalCallback(T_GOAL goal, SimpleActionServer<T_ACTION_FEEDBACK,T_ACTION_GOAL,T_ACTION_RESULT,T_FEEDBACK,T_GOAL,T_RESULT> actionServer);
 	
 }
