@@ -7,11 +7,6 @@ import ros.Ros;
 import ros.RosException;
 import ros.actionlib.client.ActionClient;
 import ros.actionlib.client.SimpleActionClient;
-import ros.actionlib.example.FibonacciActionClient;
-import ros.actionlib.example.FibonacciActionServer;
-import ros.actionlib.example.FibonacciActionSpec;
-import ros.actionlib.example.FibonacciSimpleActionClient;
-import ros.actionlib.example.FibonacciSimpleActionServer;
 import ros.actionlib.server.ActionServer;
 import ros.actionlib.server.ActionServerCallbacks;
 import ros.actionlib.server.SimpleActionServer;
@@ -61,7 +56,8 @@ import ros.pkg.roslib.msg.Header;
  * </pre>
  * </blockquote>
  * In order to cut the declaration part short, a specialized ActionSpec can be
- * derived and used (e.g. {@link FibonacciActionSpec}):
+ * derived and used (e.g. FibonacciActionSpec, which is part of ROS package 
+ * 'test_actionlib_java'):
  * <blockquote>
  * <pre>
  * {@code 
@@ -73,12 +69,6 @@ import ros.pkg.roslib.msg.Header;
  * 
  * 
  * @author Alexander C. Perzylo, perzylo@cs.tum.edu
- * 
- * @see FibonacciActionSpec
- * @see FibonacciActionClient
- * @see FibonacciSimpleActionClient
- * @see FibonacciActionServer
- * @see FibonacciSimpleActionServer
  * 
  * @param <T_ACTION>
  *            action message

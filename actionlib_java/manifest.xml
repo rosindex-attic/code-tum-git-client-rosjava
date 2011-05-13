@@ -10,7 +10,6 @@
   <url>http://ros.org/wiki/actionlib_java</url>
   <depend package="rosjava"/>
   <depend package="actionlib_msgs"/>
-  <depend package="actionlib_tutorials"/>
 
 </package>
 

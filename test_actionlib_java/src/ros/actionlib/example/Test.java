@@ -1,9 +1,8 @@
-package ros.actionlib;
+package ros.actionlib.example;
 
 import ros.Ros;
+import ros.actionlib.ActionSpec;
 import ros.actionlib.client.SimpleActionClient;
-import ros.actionlib.example.FibonacciActionSpec;
-import ros.actionlib.example.FibonacciSimpleActionClient;
 import ros.actionlib.state.SimpleClientGoalState;
 import ros.communication.Duration;
 import ros.pkg.actionlib_tutorials.msg.FibonacciAction;
@@ -31,13 +30,16 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 
-		testSimpleActionClientHidingGenerics(4);
-		//testSimpleActionClient(4);
+		//testSimpleActionClientHidingGenerics();
+		//testSimpleActionClient();
+		testSimpleActionServer();
 
 	}
 
-	public static void testSimpleActionClient(int order) {
+	public static void testSimpleActionClient() {
 
+		int order = 4;
+		
 		Ros ros = Ros.getInstance();
 		ros.init("test_fibonacci");
 
@@ -97,7 +99,9 @@ public class Test {
 
 	}
 	
-	public static void testSimpleActionClientHidingGenerics(int order) {
+	public static void testSimpleActionClientHidingGenerics() {
+		
+		int order = 4;
 		
 		Ros ros = Ros.getInstance();
 		ros.init("test_fibonacci");
@@ -138,6 +142,22 @@ public class Test {
 
 		sac.stopSpinThread();
 		ros.logInfo("[Test] Spin thread stopped");
+		
+	}
+	
+	public static void testSimpleActionServer() {
+
+		Ros ros = Ros.getInstance();
+		ros.init("test_fibonacci2");
+		
+		// user code implementing the SimpleActionServerCallbacks interface
+		FibonacciUserImpl impl = new FibonacciUserImpl();
+
+		FibonacciActionSpec spec = new FibonacciActionSpec();
+		FibonacciSimpleActionServer sas; 
+		sas = spec.buildSimpleActionServer("fibonacci", impl, true, false);
+		sas.start();
+		Ros.getInstance().spin();
 		
 	}
 	

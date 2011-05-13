@@ -19,6 +19,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 add_classpath(${PROJECT_SOURCE_DIR}/bin)
 add_runtime_classpath(${PROJECT_SOURCE_DIR}/bin)
 add_java_source_dir(${PROJECT_SOURCE_DIR}/src)
+rospack_add_java_executable(test ros.actionlib.example.Test)
 
 #uncomment if you have defined messages
 #rosbuild_genmsg()

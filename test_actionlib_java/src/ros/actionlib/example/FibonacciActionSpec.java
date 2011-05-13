@@ -3,6 +3,8 @@ package ros.actionlib.example;
 import ros.NodeHandle;
 import ros.RosException;
 import ros.actionlib.ActionSpec;
+import ros.actionlib.server.ActionServerCallbacks;
+import ros.actionlib.server.SimpleActionServerCallbacks;
 import ros.pkg.actionlib_tutorials.msg.FibonacciAction;
 import ros.pkg.actionlib_tutorials.msg.FibonacciActionFeedback;
 import ros.pkg.actionlib_tutorials.msg.FibonacciActionGoal;
@@ -54,7 +56,7 @@ public class FibonacciActionSpec extends ActionSpec<FibonacciAction, FibonacciAc
 		return ac;
 
 	}
-
+	
 	@Override
 	public FibonacciSimpleActionClient buildSimpleActionClient(String nameSpace) {
 
@@ -81,4 +83,40 @@ public class FibonacciActionSpec extends ActionSpec<FibonacciAction, FibonacciAc
 
 	}
 
+	@Override
+	public FibonacciActionServer buildActionServer(String nameSpace, 
+			ActionServerCallbacks<FibonacciActionFeedback, FibonacciActionGoal, FibonacciActionResult, FibonacciFeedback, FibonacciGoal, FibonacciResult> callbacks,
+			boolean autoStart) {
+
+		return new FibonacciActionServer(nameSpace, this, callbacks, autoStart);
+
+	}
+	
+	@Override
+	public FibonacciActionServer buildActionServer(NodeHandle nodeHandle, String nameSpace, 
+			ActionServerCallbacks<FibonacciActionFeedback, FibonacciActionGoal, FibonacciActionResult, FibonacciFeedback, FibonacciGoal, FibonacciResult> callbacks,
+			boolean autoStart) {
+
+		return new FibonacciActionServer(nodeHandle, nameSpace, this, callbacks, autoStart);
+
+	}
+
+	@Override
+	public FibonacciSimpleActionServer buildSimpleActionServer(String nameSpace, 
+			SimpleActionServerCallbacks<FibonacciActionFeedback, FibonacciActionGoal, FibonacciActionResult, FibonacciFeedback, FibonacciGoal, FibonacciResult> callbacks,
+			boolean useBlockingGoalCallback, boolean autoStart) {
+
+		return new FibonacciSimpleActionServer(nameSpace, this, callbacks, useBlockingGoalCallback, autoStart);
+
+	}
+
+	@Override
+	public FibonacciSimpleActionServer buildSimpleActionServer(NodeHandle nodeHandle, String nameSpace, 
+			SimpleActionServerCallbacks<FibonacciActionFeedback, FibonacciActionGoal, FibonacciActionResult, FibonacciFeedback, FibonacciGoal, FibonacciResult> callbacks,
+			boolean useBlockingGoalCallback, boolean autoStart) {
+
+		return new FibonacciSimpleActionServer(nodeHandle, nameSpace, this, callbacks, useBlockingGoalCallback, autoStart);
+
+	}
+	
 }

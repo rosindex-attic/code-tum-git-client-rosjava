@@ -14,7 +14,7 @@ import ros.pkg.actionlib_tutorials.msg.FibonacciResult;
  * The FibonacciSimpleActionClient is a specialized SimpleActionClient that
  * is intended to work with an action server offering services related to
  * the Fibonacci action. The FibonacciSimpleActionClient completely hides 
- * the Generics approach of the SimpleActionClient implementation.
+ * the Generics approach of the SimpleActionClient's implementation.
  * 
  * @author Alexander C. Perzylo, perzylo@cs.tum.edu
  * 
