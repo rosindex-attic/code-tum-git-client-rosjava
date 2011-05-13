@@ -22,7 +22,8 @@ add_runtime_classpath(${actionlib_java_PACKAGE_PATH}/bin)
 add_classpath(${PROJECT_SOURCE_DIR}/bin)
 add_runtime_classpath(${PROJECT_SOURCE_DIR}/bin)
 add_java_source_dir(${PROJECT_SOURCE_DIR}/src)
-rospack_add_java_executable(test ros.actionlib.example.Test)
+rospack_add_java_executable(fibonacci_client ros.actionlib.example.RunFibonacciSimpleActionClient)
+rospack_add_java_executable(fibonacci_server ros.actionlib.example.RunFibonacciSimpleActionServer)
 
 #uncomment if you have defined messages
 #rosbuild_genmsg()

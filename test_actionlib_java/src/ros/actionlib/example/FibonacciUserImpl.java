@@ -14,6 +14,8 @@ public class FibonacciUserImpl implements SimpleActionServerCallbacks<FibonacciA
 	@Override
 	public void blockingGoalCallback(FibonacciGoal goal, SimpleActionServer<FibonacciActionFeedback,FibonacciActionGoal,FibonacciActionResult,FibonacciFeedback,FibonacciGoal,FibonacciResult> actionServer) {
 
+		System.out.println("BLOCKING GOAL CALLBACK");
+		
 		int order = (goal.order > 0) ? goal.order:0;
 		int[] seq = new int[order];
 		
@@ -41,12 +43,12 @@ public class FibonacciUserImpl implements SimpleActionServerCallbacks<FibonacciA
 	}
 
 	@Override
-	public void goalCallback() {
+	public void goalCallback(SimpleActionServer<FibonacciActionFeedback,FibonacciActionGoal,FibonacciActionResult,FibonacciFeedback,FibonacciGoal,FibonacciResult> actionServer) {
 		System.out.println("GOAL CALLBACK");
 	}
 
 	@Override
-	public void preemptCallback() {
+	public void preemptCallback(SimpleActionServer<FibonacciActionFeedback,FibonacciActionGoal,FibonacciActionResult,FibonacciFeedback,FibonacciGoal,FibonacciResult> actionServer) {
 		System.out.println("PREEMPT CALLBACK");
 	}
 
@@ -64,6 +66,15 @@ public class FibonacciUserImpl implements SimpleActionServerCallbacks<FibonacciA
 		FibonacciFeedback feedback = new FibonacciFeedback();
 		feedback.sequence = seq;
 		actionServer.publishFeedback(feedback);
+		
+		System.out.print("FEEDBACK:");
+		for (int i=0; i< feedback.sequence.length; i++) {
+			if (feedback.sequence[i] == 0 && i != 0) {
+				break;
+			}
+			System.out.print(" "+feedback.sequence[i]);
+		}
+		System.out.println();
 		
 	}
 	
