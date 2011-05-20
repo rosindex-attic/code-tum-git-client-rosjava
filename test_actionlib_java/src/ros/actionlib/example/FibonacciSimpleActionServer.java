@@ -37,14 +37,18 @@ public class FibonacciSimpleActionServer extends SimpleActionServer<FibonacciAct
 	 * @param useBlockingGoalCallback
 	 *            If set to <tt>true</tt> a new thread gets created which
 	 *            services the blockinGoalCallback method by conveniently
-	 *            preempting goals and providing the next goal to the callback.
-	 *            This also allows the user to have time consuming operations
-	 *            inside of this callback method.<br>
+	 *            providing the next goal to the callback. This also allows the
+	 *            user to have time consuming operations inside of this callback
+	 *            method. An invocation of the preemptCallback method signals
+	 *            the presence of a new goal request and the user has to make
+	 *            sure, that a currently worked on goal request gets canceled.
+	 *            In this mode the goalCallback method is never used.<br>
 	 *            If set to <tt>false</tt>, the user will be responsible for
-	 *            goal management and only gets informed on the arrival of new
-	 *            goal and preempt requests through calls to the goalCallback
-	 *            and preemptCallback methods. This methods have to return
-	 *            immediately and thus may only contain non-blocking code.
+	 *            picking up new goals from the action server and only gets
+	 *            informed on the arrival of new goal and preempt requests
+	 *            through calls of the goalCallback and preemptCallback methods.
+	 *            This methods have to return immediately and thus may only
+	 *            contain non-blocking code.
 	 * @param autoStart
 	 *            A flag, indicating whether the action server shall be
 	 *            automatically started after instantiation or not. An action
@@ -89,14 +93,18 @@ public class FibonacciSimpleActionServer extends SimpleActionServer<FibonacciAct
 	 * @param useBlockingGoalCallback
 	 *            If set to <tt>true</tt> a new thread gets created which
 	 *            services the blockinGoalCallback method by conveniently
-	 *            preempting goals and providing the next goal to the callback.
-	 *            This also allows the user to have time consuming operations
-	 *            inside of this callback method.<br>
+	 *            providing the next goal to the callback. This also allows the
+	 *            user to have time consuming operations inside of this callback
+	 *            method. An invocation of the preemptCallback method signals
+	 *            the presence of a new goal request and the user has to make
+	 *            sure, that a currently worked on goal request gets canceled.
+	 *            In this mode the goalCallback method is never used.<br>
 	 *            If set to <tt>false</tt>, the user will be responsible for
-	 *            goal management and only gets informed on the arrival of new
-	 *            goal and preempt requests through calls to the goalCallback
-	 *            and preemptCallback methods. This methods have to return
-	 *            immediately and thus may only contain non-blocking code.
+	 *            picking up new goals from the action server and only gets
+	 *            informed on the arrival of new goal and preempt requests
+	 *            through calls of the goalCallback and preemptCallback methods.
+	 *            This methods have to return immediately and thus may only
+	 *            contain non-blocking code.
 	 * @param autoStart
 	 *            A flag, indicating whether the action server shall be
 	 *            automatically started after instantiation or not. An action
