@@ -2,6 +2,7 @@ package ros.actionlib.example;
 
 import ros.NodeHandle;
 import ros.RosException;
+import ros.actionlib.ActionSpec;
 import ros.actionlib.client.SimpleActionClient;
 import ros.pkg.actionlib_tutorials.msg.FibonacciActionFeedback;
 import ros.pkg.actionlib_tutorials.msg.FibonacciActionGoal;
@@ -22,16 +23,62 @@ import ros.pkg.actionlib_tutorials.msg.FibonacciResult;
  */
 public class FibonacciSimpleActionClient extends SimpleActionClient<FibonacciActionFeedback, FibonacciActionGoal, FibonacciActionResult, FibonacciFeedback, FibonacciGoal, FibonacciResult> {
 
+	/**
+	 * Constructor used to create a simple action client for the Fibonacci
+	 * action given a names space and the Fibonacci action's specification.
+	 * 
+	 * @param nameSpace
+	 *            The name space to communicate within (specified by the action
+	 *            server)
+	 * @param spec
+	 *            The specification of the action
+	 * @param useSpinThread
+	 *            A flag, indicating whether a thread for servicing the callbacks
+	 *            shall be automatically started with the client or not
+	 * @throws RosException
+	 *             If setting up the needed subscribers and publishers fail
+	 */
 	public FibonacciSimpleActionClient(String nameSpace,
-			FibonacciActionSpec spec, boolean useSpinThread)
-	throws RosException {
+			ActionSpec<?,
+					FibonacciActionFeedback,
+					FibonacciActionGoal,
+					FibonacciActionResult,
+					FibonacciFeedback,
+					FibonacciGoal,
+					FibonacciResult> spec,
+			boolean useSpinThread) throws RosException {
 
 		super(nameSpace, spec, useSpinThread);
 
 	}
 
+	/**
+	 * Constructor used to create as simple action client for the Fibonacci
+	 * action given a parent node handle, names space and the Fibonacci action's
+	 * specification.
+	 * 
+	 * @param parent
+	 *            The parent node of this simple action client
+	 * @param nameSpace
+	 *            The name space to communicate within (specified by the action
+	 *            server)
+	 * @param spec
+	 *            The specification of the action
+	 * @param useSpinThread
+	 *            A flag, indicating whether a thread for servicing the callbacks
+	 *            shall be automatically started with the client or not
+	 * @throws RosException
+	 *             If setting up the needed subscribers and publishers fail
+	 */
 	public FibonacciSimpleActionClient(NodeHandle parentNode,
-			String nameSpace, FibonacciActionSpec spec,
+			String nameSpace,
+			ActionSpec<?,
+					FibonacciActionFeedback,
+					FibonacciActionGoal,
+					FibonacciActionResult,
+					FibonacciFeedback,
+					FibonacciGoal,
+					FibonacciResult> spec,
 			boolean useSpinThread) throws RosException {
 
 		super(parentNode, nameSpace, spec, useSpinThread);

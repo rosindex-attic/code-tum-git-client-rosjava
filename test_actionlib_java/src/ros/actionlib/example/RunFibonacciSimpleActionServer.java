@@ -18,11 +18,23 @@ public class RunFibonacciSimpleActionServer {
 		// user code implementing the SimpleActionServerCallbacks interface
 		FibonacciUserImpl impl = new FibonacciUserImpl();
 
+		// the action specification for the Fibonacci action
 		FibonacciActionSpec spec = new FibonacciActionSpec();
+		
+		// build simple action server for the Fibonacci action 
 		FibonacciSimpleActionServer sas; 
 		sas = spec.buildSimpleActionServer("fibonacci", impl, true, false);
+
+		// start server
+		ros.logInfo("[Test] Starting action server");
 		sas.start();
-		Ros.getInstance().spin();
+		
+		// service callbacks
+		ros.spin();
+		
+		// shutdown server on exit 
+		sas.shutdown();
+		ros.logInfo("[Test] Action server was shutdown");
 		
 	}
 	

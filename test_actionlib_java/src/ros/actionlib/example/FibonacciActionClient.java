@@ -2,6 +2,7 @@ package ros.actionlib.example;
 
 import ros.NodeHandle;
 import ros.RosException;
+import ros.actionlib.ActionSpec;
 import ros.actionlib.client.ActionClient;
 import ros.pkg.actionlib_tutorials.msg.FibonacciActionFeedback;
 import ros.pkg.actionlib_tutorials.msg.FibonacciActionGoal;
@@ -22,15 +23,54 @@ import ros.pkg.actionlib_tutorials.msg.FibonacciResult;
  */
 public class FibonacciActionClient extends ActionClient<FibonacciActionFeedback, FibonacciActionGoal, FibonacciActionResult, FibonacciFeedback, FibonacciGoal, FibonacciResult> {
 
+	/**
+	 * Constructor used to create an action client for the Fibonacci action
+	 * given a names space and the Fibonacci action's specification.
+	 * 
+	 * @param nameSpace
+	 *            The name space to communicate within (specified by the action
+	 *            server)
+	 * @param spec
+	 *            The specification of the action
+	 * @throws RosException
+	 *             If setting up the needed subscribers and publishers fail
+	 */
 	public FibonacciActionClient(String nameSpace, 
-			FibonacciActionSpec spec) throws RosException {
+			ActionSpec<?,
+					FibonacciActionFeedback,
+					FibonacciActionGoal,
+					FibonacciActionResult,
+					FibonacciFeedback,
+					FibonacciGoal,
+					FibonacciResult> spec) throws RosException {
 
 		super(nameSpace, spec);
 
 	}
 
+	/**
+	 * Constructor used to create an action client for the Fibonacci action
+	 * given a parent node handle, names space and the Fibonacci action's
+	 * specification.
+	 * 
+	 * @param parent
+	 *            The parent node of this action client
+	 * @param nameSpace
+	 *            The name space to communicate within (specified by the action
+	 *            server)
+	 * @param spec
+	 *            The specification of the action
+	 * @throws RosException
+	 *             If setting up the needed subscribers and publishers fail
+	 */
 	public FibonacciActionClient(NodeHandle parent, String nameSpace,
-			FibonacciActionSpec spec) throws RosException {
+			ActionSpec<?,
+					FibonacciActionFeedback,
+					FibonacciActionGoal,
+					FibonacciActionResult,
+					FibonacciFeedback,
+					FibonacciGoal,
+					FibonacciResult> spec) throws RosException {
 
 		super(parent, nameSpace, spec);
 

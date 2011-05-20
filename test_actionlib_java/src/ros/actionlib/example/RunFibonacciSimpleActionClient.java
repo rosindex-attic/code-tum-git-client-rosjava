@@ -23,7 +23,7 @@ public class RunFibonacciSimpleActionClient {
 	
 	public static void run() {
 		
-		int length = 4;
+		int length = 20;
 		
 		Ros ros = Ros.getInstance();
 		ros.init("test_fibonacci_client_java");
@@ -32,26 +32,30 @@ public class RunFibonacciSimpleActionClient {
 		// having to write a lot of data types as class parameters for 
 		// the ActionSpec/ActionClient classes based on Generics
 		FibonacciActionSpec spec = new FibonacciActionSpec();
+		
+		// build simple action client for the Fibonacci action
 		FibonacciSimpleActionClient sac = spec.buildSimpleActionClient("fibonacci");
 
+		// wait for the action server to start (for infinite time)
 		ros.logInfo("[Test] Waiting for action server to start");
-		// wait for the action server to start
-		sac.waitForServer(); // will wait for infinite time
+		sac.waitForServer();
 
+		// send a goal to the action server
 		ros.logInfo("[Test] Action server started, sending goal");
-		// send a goal to the action
 		FibonacciGoal goal = spec.createGoalMessage();
 		goal.order = length;
 		sac.sendGoal(goal);
 
-		// wait for the action to return
+		// wait for the action server to return a result (up to 30s)
 		ros.logInfo("[Test] Waiting for result.");
-		boolean finished_before_timeout = sac.waitForResult(new Duration(100.0));
+		boolean finished_before_timeout = sac.waitForResult(new Duration(30.0));
 
 		if (finished_before_timeout) {
+			// get state of action client
 			SimpleClientGoalState state = sac.getState();
-			ros.logInfo("[Test] Action finished: " + state.toString());
+			ros.logInfo("[Test] Action finished: " + state);
 
+			// get the result received from the action server
 			FibonacciResult res = sac.getResult();
 			System.out.print("[Test] Fibonacci sequence (" + goal.order + "):");
 			for (int i : res.sequence) {
@@ -62,17 +66,18 @@ public class RunFibonacciSimpleActionClient {
 			ros.logInfo("[Test] Action did not finish before the time out");
 		}
 
-		sac.stopSpinThread();
-		ros.logInfo("[Test] Spin thread stopped");
+		// shutdown action client on exit
+		sac.shutdown();
+		ros.logInfo("[Test] Action client was shutdown");
 		
 	}
 
 	public static void run2() {
 
-		int order = 4;
+		int length = 20;
 		
 		Ros ros = Ros.getInstance();
-		ros.init("test_fibonacci");
+		ros.init("test_fibonacci_client_java");
 
 		ActionSpec<FibonacciAction,
 			FibonacciActionFeedback,
@@ -97,24 +102,26 @@ public class RunFibonacciSimpleActionClient {
 			FibonacciGoal, 
 			FibonacciResult> sac = spec.buildSimpleActionClient("fibonacci");
 
+		// wait for the action server to start (for infinite time)
 		ros.logInfo("[Test] Waiting for action server to start");
-		// wait for the action server to start
-		sac.waitForServer(); // will wait for infinite time
+		sac.waitForServer();
 
+		// send a goal to the action server
 		ros.logInfo("[Test] Action server started, sending goal");
-		// send a goal to the action
 		FibonacciGoal goal = spec.createGoalMessage();
-		goal.order = order;
+		goal.order = length;
 		sac.sendGoal(goal);
 
-		// wait for the action to return
+		// wait for the action server to return a result (up to 30s)
 		ros.logInfo("[Test] Waiting for result.");
-		boolean finished_before_timeout = sac.waitForResult(new Duration(100.0));
+		boolean finished_before_timeout = sac.waitForResult(new Duration(30.0));
 
 		if (finished_before_timeout) {
+			// get state of action client
 			SimpleClientGoalState state = sac.getState();
-			ros.logInfo("[Test] Action finished: " + state.toString());
+			ros.logInfo("[Test] Action finished: " + state);
 
+			// get the result received from the action server
 			FibonacciResult res = sac.getResult();
 			System.out.print("[Test] Fibonacci sequence (" + goal.order + "):");
 			for (int i : res.sequence) {
@@ -125,8 +132,9 @@ public class RunFibonacciSimpleActionClient {
 			ros.logInfo("[Test] Action did not finish before the time out");
 		}
 
-		sac.stopSpinThread();
-		ros.logInfo("[Test] Spin thread stopped");
+		// shutdown action client on exit
+		sac.shutdown();
+		ros.logInfo("[Test] Action client was shutdown");
 
 	}
 	
