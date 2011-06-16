@@ -15,7 +15,7 @@ import ros.communication.Message;
 import ros.communication.Time;
 import ros.pkg.actionlib_msgs.msg.GoalID;
 import ros.pkg.actionlib_msgs.msg.GoalStatus;
-import ros.pkg.roslib.msg.Header;
+import ros.pkg.std_msgs.msg.Header;
 
 /**
  * 
