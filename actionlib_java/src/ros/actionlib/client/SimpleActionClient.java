@@ -322,8 +322,8 @@ public class SimpleActionClient<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 	 * @see ActionClient#shutdown()
 	 */
 	public void shutdown() {
-		actionClient.shutdown();
 		stopSpinThread();
+		actionClient.shutdown();
 	}
 	
 	/**
@@ -553,19 +553,19 @@ public class SimpleActionClient<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 	 * <tt>true</tt> when invoking one of the constructors. If there already is
 	 * a spin thread running, this method does nothing.
 	 * 
-	 * @param wallTimeInMS The average time between two calls of 'spinOnce()' 
+	 * @param avgTimeBetweenCalls The average time between two calls of 'spinOnce()' 
 	 * in milliseconds
 	 */
-	public void startSpinThread(long wallTimeInMS) {
+	public void startSpinThread(long avgTimeBetweenCalls) {
 
-		if (wallTimeInMS < 0) {
-			Ros.getInstance().logWarn("[SimpleActionClient] The spin rate for servicing the callbacks must be positive. Now using a rate of ~10Hz");
-			wallTimeInMS = 100;
-		}
-		
 		synchronized (spinSync) {
 			
 			if (spinTimer == null) {
+
+				if (avgTimeBetweenCalls < 0) {
+					Ros.getInstance().logWarn("[SimpleActionClient] The spin rate for servicing the callbacks must be positive. Now using a rate of ~10Hz");
+					avgTimeBetweenCalls = 100;
+				}
 				
 				TimerTask spinTask = new TimerTask() {
 					@Override
@@ -574,7 +574,7 @@ public class SimpleActionClient<T_ACTION_FEEDBACK extends Message, T_ACTION_GOAL
 					}
 				};
 				spinTimer = new Timer();
-				spinTimer.scheduleAtFixedRate(spinTask, 0, wallTimeInMS);
+				spinTimer.scheduleAtFixedRate(spinTask, 0, avgTimeBetweenCalls);
 				
 			} else {
 				Ros.getInstance().logWarn("[SimpleActionClient] startSpinThread: spin thread is already running");

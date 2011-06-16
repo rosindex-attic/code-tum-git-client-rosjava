@@ -23,6 +23,9 @@ import ros.pkg.actionlib_tutorials.msg.FibonacciResult;
  */
 public class FibonacciUserImpl implements SimpleActionServerCallbacks<FibonacciActionFeedback, FibonacciActionGoal, FibonacciActionResult, FibonacciFeedback, FibonacciGoal, FibonacciResult> {
 
+	private volatile boolean preempt = false;
+	private Object wait = new Object();
+	
 	@Override
 	public void blockingGoalCallback(
 			FibonacciGoal goal,
@@ -38,19 +41,28 @@ public class FibonacciUserImpl implements SimpleActionServerCallbacks<FibonacciA
 
 		if (order > 0) {
 			seq[0] = 0;
-			publishFeedback(seq, actionServer);
-			snore();
 		}
 		if (order > 1) {
 			seq[1] = 1;
-			publishFeedback(seq, actionServer);
-			snore();
 		}
 
 		for (int i = 2; i < order; i++) {
 			seq[i] = seq[i - 1] + seq[i - 2];
 			publishFeedback(seq, actionServer);
-			snore();
+			if (preempt) {
+				
+				FibonacciResult result = new FibonacciResult();
+				result.sequence = seq;
+				actionServer.setPreempted(result, "This goal was " +
+						"preempted due to another goal request.");
+				synchronized (wait) {
+					wait.notifyAll();
+				}
+				return;
+				
+			} else {
+				snore();	
+			}
 		}
 
 		FibonacciResult result = new FibonacciResult();
@@ -79,6 +91,20 @@ public class FibonacciUserImpl implements SimpleActionServerCallbacks<FibonacciA
 				FibonacciGoal,
 				FibonacciResult> actionServer) {
 
+		synchronized (wait) {
+		
+			preempt = true;
+
+			try {
+				wait.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			preempt = false;
+			
+		}
+		
 	}
 
 	/**
